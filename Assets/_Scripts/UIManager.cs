@@ -3,20 +3,36 @@ using System.Collections.Generic;
 using UnityEngine;
 using EventDispatcher;
 using UnityEngine.UI;
+using System;
 
-public class UIManager : MonoBehaviour {
+public class UIManager : MonoBehaviour
+{
     public static UIManager Instance = new UIManager();
+    void Awake()
+    {
+        if (Instance != null)
+        {
+            return;
+        }
+        Instance = this;
+    }
+
     bool isNewPlayer;
     public GameObject panelStart;
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    [Header("UI")]
+    public Text txtScore;
+    // Use this for initialization
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
 
     public void Btn_Play()
     {
@@ -38,4 +54,34 @@ public class UIManager : MonoBehaviour {
         GameManager.Instance.state = State.PLAYING;
         panelStart.SetActive(false);
     }
+
+    #region === SUPPORT ===
+    private string[] cashFormat = new string[]
+	{
+		"K",
+		"M",
+		"B",
+		"T"
+	};
+    public string ConvertCash(double cash)
+    {
+        if (cash < 1000.0)
+        {
+            return Math.Round(cash).ToString();
+        }
+        int num = 0;
+        double num2 = 0.0;
+        for (int i = 0; i < cashFormat.Length; i++)
+        {
+            num2 = cash / Math.Pow(1000.0, (double)(i + 1));
+            if (num2 < 1000.0)
+            {
+                num2 = Math.Round(num2, (num2 >= 100.0) ? 0 : 1);
+                num = i;
+                break;
+            }
+        }
+        return num2.ToString() + cashFormat[num];
+    }
+    #endregion
 }

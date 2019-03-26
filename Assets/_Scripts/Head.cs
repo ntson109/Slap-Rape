@@ -55,6 +55,7 @@ public class Head : MonoBehaviour
         isMoving = true;
         thisNode.isCanClick = true;
         thisNode.countTap = 0;
+        thisNode.score = 0;
         this.transform.DOPath(new Vector3[] { posEnd.position }, speed).OnComplete(() =>
         {
             Kiss();
@@ -80,6 +81,7 @@ public class Head : MonoBehaviour
             isMoving = false;
             timer = 0;
             GetTimeMove();
+            GameManager.Instance.AddScore(thisNode.score);
         }).OnUpdate(() =>
         {
             if (isMoving)

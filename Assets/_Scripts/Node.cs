@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class Node : MonoBehaviour
 {
     public int countTap;
+    public int score;
     Button thisButton;
     public bool isClick;
     public bool isCanClick;
@@ -53,7 +54,8 @@ public class Node : MonoBehaviour
             {
                 //if (isClick)
                 //{
-                //    this.head.isMoving = false;
+                //    timer = 0;
+                //    isCanClick = false;
                 //    this.head.Back();
                 //}
             }
@@ -79,7 +81,14 @@ public class Node : MonoBehaviour
                 if (!isClick)
                     isClick = true;
                 countTap += 1;
-                Debug.Log("Slap");
+                if (countTap > 1)
+                {
+                    score += 2;
+                }
+                else
+                {
+                    score += 1;
+                }
             }
         }
     }

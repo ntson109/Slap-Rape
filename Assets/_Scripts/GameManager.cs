@@ -16,26 +16,29 @@ public class GameManager : MonoBehaviour
     }
 
     public State state;
-    public long GOLD;
+    public long SCORE;
     public long COIN;
     // Use this for initialization
     void Start()
     {
-
+        SCORE = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        if (state == State.PLAYING)
+        {
+            UIManager.Instance.txtScore.text = SCORE.ToString();
+        }
     }
 
-    public void AddGold(long _value)
+    public void AddScore(long _value)
     {
-        GOLD = GOLD + (_value);
+        SCORE = SCORE + (_value);
 
-        if (GOLD <= 0)
-            GOLD = 0;
+        if (SCORE <= 0)
+            SCORE = 0;
     }
 
     public void AddCoin(long _value)
