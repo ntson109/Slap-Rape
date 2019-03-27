@@ -4,6 +4,7 @@ using UnityEngine;
 using EventDispatcher;
 using UnityEngine.UI;
 using System;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -22,6 +23,9 @@ public class UIManager : MonoBehaviour
 
     [Header("UI")]
     public Text txtScore;
+    public Text txtLevel;
+    public Text txtHealth;
+    public GameObject panelGameOver;
     // Use this for initialization
     void Start()
     {
@@ -40,7 +44,7 @@ public class UIManager : MonoBehaviour
         isNewPlayer = true;
         ScenesManager.Instance.GoToScene(ScenesManager.TypeScene.Main, () =>
         {
-            this.PostEvent(EventID.START_GAME);
+            
             panelStart.SetActive(true);
             //GameManager.Instance.state = State.PLAYING;
             //GameManager.Instance.AddGold(GameConfig.Instance.GoldStart);
@@ -51,8 +55,15 @@ public class UIManager : MonoBehaviour
 
     public void Btn_Play_2()
     {
+        Time.timeScale = 1;
+        this.PostEvent(EventID.START_GAME);
         GameManager.Instance.state = State.PLAYING;
         panelStart.SetActive(false);
+    }
+
+    public void btn_Replay()
+    {
+        SceneManager.LoadScene("Main", LoadSceneMode.Single);
     }
 
     #region === SUPPORT ===

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using EventDispatcher;
 
 public class Head : MonoBehaviour
 {
@@ -20,12 +21,12 @@ public class Head : MonoBehaviour
     public StateHead state;
     public bool isMoving;
     public float timeMove;
+    float xTimeMove;
     public float timer;
     void Start()
     {
+        this.RegisterListener(EventID.START_GAME, (param) => ON_START_GAME());
         this.state = StateHead.NONE;
-        this.speed = Random.Range(1f, 2.5f);
-        GetTimeMove();
     }
 
     void Update()
@@ -49,6 +50,20 @@ public class Head : MonoBehaviour
         }
     }
 
+    void ON_START_GAME()
+    {
+        this.speed = Random.Range(GameConfig.Instance.Speed_Min, GameConfig.Instance.Speed_Max);
+        xTimeMove = 1;
+        GetTimeMove();
+        this.RegisterListener(EventID.UP_LEVEL, (param) => ON_UP_LEVEL());
+    }
+
+    void ON_UP_LEVEL()
+    {
+        this.speed /= 1.5f;
+        xTimeMove *= 1.5f;
+    }
+
     public void Move()
     {
         //Vector3.MoveTowards(this.transform.position, posEnd.position, speed * Time.deltaTime)
@@ -66,6 +81,7 @@ public class Head : MonoBehaviour
     {
         thisNode.isCanClick = false;
         state = StateHead.KISS;
+        GameManager.Instance.AddKiss();
         this.transform.DOPath(new Vector3[] { transform.position }, 1f).OnComplete(() =>
         {
             Back();
@@ -81,6 +97,7 @@ public class Head : MonoBehaviour
             isMoving = false;
             timer = 0;
             GetTimeMove();
+            this.thisNode.ShowScore();
             GameManager.Instance.AddScore(thisNode.score);
         }).OnUpdate(() =>
         {
@@ -103,7 +120,7 @@ public class Head : MonoBehaviour
 
     void GetTimeMove()
     {
-        timeMove = Random.Range(2f, 5f);
+        timeMove = Random.Range(GameConfig.Instance.TimeMove_Min, GameConfig.Instance.TimeMove_Max) / xTimeMove;
     }
 
     void SetState()

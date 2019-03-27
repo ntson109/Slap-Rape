@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using EventDispatcher;
 
 public class Node : MonoBehaviour
 {
@@ -14,14 +15,16 @@ public class Node : MonoBehaviour
     public float timer;
     public Text txtTittle;
     public Text txtKiss;
+    public Text txtScore;
 
     public Head head;
 
     void Start()
     {
+        this.RegisterListener(EventID.START_GAME, (param) => ON_START_GAME());
         thisButton = GetComponent<Button>();
         thisButton.onClick.AddListener(() => OnClick());
-        timeClick = 0.5f;
+        
     }
 
     void FixedUpdate()
@@ -30,7 +33,6 @@ public class Node : MonoBehaviour
         {
             if (this.head.state == Head.StateHead.CAN_SLAP)
             {
-
                 if (isClick)
                 {
 
@@ -72,6 +74,18 @@ public class Node : MonoBehaviour
         }
     }
 
+    void ON_START_GAME()
+    {
+
+        timeClick = GameConfig.Instance.TimeClick;
+        this.RegisterListener(EventID.UP_LEVEL, (param) => ON_UP_LEVEL());
+    }
+
+    void ON_UP_LEVEL()
+    {
+
+    }
+
     void OnClick()
     {
         if (isCanClick)
@@ -90,6 +104,33 @@ public class Node : MonoBehaviour
                     score += 1;
                 }
             }
+            else if (this.head.state == Head.StateHead.NONE)
+            {
+                //if (!isClick)
+                //    isClick = true;
+                timer = 0;
+                isCanClick = false;
+                this.head.Back();
+            }
         }
+    }
+
+    public void ShowScore()
+    {
+        if (this.score > 0)
+        {
+            txtScore.text = "+" + this.score;
+            Invoke("Deactive_ShowScore", 1.5f);
+        }
+    }
+
+    void Deactive_ShowScore()
+    {
+        txtScore.text = "";
+    }
+
+    public void UpLevel()
+    {
+
     }
 }
